@@ -1,0 +1,26 @@
+const studentsData = require('../../data/v2/studentsDataV2.json');
+const { students } = studentsData;
+
+// return a copy of students (so it's safe to mutate this later)
+const getAllStudents = () => {
+  const results = [];
+  for (const student of students) {
+    results.push({ ...student });
+  }
+
+  return results;
+};
+
+const getStudentById = (id) => {
+  const student = students.find((el) => el.id === id);
+  if (!student) {
+    return null;
+  }
+  // return a copy of the student (so it safe to mutate later)
+  return { ...student };
+};
+
+module.exports = {
+  getAllStudents,
+  getStudentById,
+};
