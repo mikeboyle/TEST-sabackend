@@ -1,4 +1,5 @@
 const express = require('express');
+const { getAllGradesForStudent } = require('../../queries/v2/gradesQueriesV2');
 const {
   getAllStudents,
   getStudentById,
@@ -28,6 +29,27 @@ studentsControllerV2.get('/:id', (request, response) => {
     response
       .status(404)
       .json({ error: `Could not find student with id ${id}` });
+  } catch (err) {
+    response.status(500).json({ error: err.message });
+  }
+});
+
+studentsControllerV2.get('/:id/grades', (request, response) => {
+  try {
+    // Find the student with id - return 404 if not found
+    const { id } = request.params;
+    const student = getStudentById(id);
+    if (!student) {
+      return response
+        .status(404)
+        .json({ error: `Could not find student with id ${id}` });
+    }
+
+    // Get all the grades for the student -- need v2/gradesQueries for this
+    const grades = getAllGradesForStudent(id);
+
+    // return the grades with status 200
+    response.status(200).json({ data: grades });
   } catch (err) {
     response.status(500).json({ error: err.message });
   }
