@@ -7,9 +7,9 @@ const {
 
 const studentsControllerV2 = express.Router();
 
-studentsControllerV2.get('/', (request, response) => {
+studentsControllerV2.get('/', async (request, response) => {
   try {
-    const students = getAllStudents();
+    const students = await getAllStudents();
 
     // if path query has include=grades, attach each student's grades
     const { include } = request.query;
@@ -17,7 +17,7 @@ studentsControllerV2.get('/', (request, response) => {
       // for each student...
       for (const student of students) {
         // get the students grades
-        const grades = getAllGradesForStudent(student.id);
+        const grades = await getAllGradesForStudent(student.id);
         // set student.grades = grades
         student.grades = grades;
       }
@@ -29,11 +29,11 @@ studentsControllerV2.get('/', (request, response) => {
   }
 });
 
-studentsControllerV2.get('/:id', (request, response) => {
+studentsControllerV2.get('/:id', async (request, response) => {
   try {
     const { id } = request.params;
 
-    const student = getStudentById(id);
+    const student = await getStudentById(id);
     if (student) {
       // return 200
       return response.status(200).json({ data: student });
@@ -47,11 +47,11 @@ studentsControllerV2.get('/:id', (request, response) => {
   }
 });
 
-studentsControllerV2.get('/:id/grades', (request, response) => {
+studentsControllerV2.get('/:id/grades', async (request, response) => {
   try {
     // Find the student with id - return 404 if not found
     const { id } = request.params;
-    const student = getStudentById(id);
+    const student = await getStudentById(id);
     if (!student) {
       return response
         .status(404)
@@ -59,7 +59,7 @@ studentsControllerV2.get('/:id/grades', (request, response) => {
     }
 
     // Get all the grades for the student -- need v2/gradesQueries for this
-    const grades = getAllGradesForStudent(id);
+    const grades = await getAllGradesForStudent(id);
 
     // return the grades with status 200
     response.status(200).json({ data: grades });
