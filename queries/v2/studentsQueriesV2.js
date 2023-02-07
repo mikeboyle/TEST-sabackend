@@ -1,4 +1,4 @@
-const studentsData = require('../data/studentsData.json');
+const studentsData = require('../../data/v2/studentsDataV2.json');
 const { students } = studentsData;
 
 // return a copy of students (so it's safe to mutate this later)
