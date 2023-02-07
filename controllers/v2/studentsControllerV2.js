@@ -10,6 +10,19 @@ const studentsControllerV2 = express.Router();
 studentsControllerV2.get('/', (request, response) => {
   try {
     const students = getAllStudents();
+
+    // if path query has include=grades, attach each student's grades
+    const { include } = request.query;
+    if (include === 'grades') {
+      // for each student...
+      for (const student of students) {
+        // get the students grades
+        const grades = getAllGradesForStudent(student.id);
+        // set student.grades = grades
+        student.grades = grades;
+      }
+    }
+
     response.status(200).json({ data: students });
   } catch (err) {
     response.status(500).json({ error: err.message });
